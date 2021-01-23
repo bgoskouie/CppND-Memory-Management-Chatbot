@@ -12,6 +12,7 @@ class ChatBot
 private:
     // data handles (owned)
     wxBitmap *_image; // avatar image
+    std::string _filename;  // BO2
 
     // data handles (not owned)
     GraphNode *_currentNode;
@@ -19,6 +20,9 @@ private:
     ChatLogic *_chatLogic;
 
     // proprietary functions
+    // BO: This function gives us a measure of similarity between two strings s1 and s2.
+    // BO: The output is the number of characters that need
+    // BO: to change on string s1 to make it like string s2.
     int ComputeLevenshteinDistance(std::string s1, std::string s2);
 
 public:
@@ -29,7 +33,10 @@ public:
 
     //// STUDENT CODE
     ////
-
+    ChatBot(const ChatBot& source);             // BO2: Copy Constructor
+    ChatBot& operator=(const ChatBot& source);  // BO2: Copy Assignment Operator
+    ChatBot(ChatBot&& source);                  // BO2: Move Constructor
+    ChatBot& operator=(ChatBot&& source);       // BO2: Move Assignment Operator
     ////
     //// EOF STUDENT CODE
 

@@ -1,6 +1,6 @@
 #ifndef CHATLOGIC_H_
 #define CHATLOGIC_H_
-
+#include <memory>       // BO3
 #include <vector>
 #include <string>
 #include "chatgui.h"
@@ -17,14 +17,15 @@ private:
     ////
 
     // data handles (owned)
-    std::vector<GraphNode *> _nodes;
-    std::vector<GraphEdge *> _edges;
+    // std::vector<GraphNode *> _nodes;  // BO: chatlogic owns nodes
+    std::vector<std::unique_ptr<GraphNode>> _nodes;    // BO3
+    std::vector<GraphEdge *> _edges;  // BO: you will have to change the ownership of edges from chatLogic to the nodes
 
     ////
     //// EOF STUDENT CODE
 
-    // data handles (not owned)
-    GraphNode *_currentNode;
+    // data handles (not owned)     // BO: chatlogic has a handle to this
+    // GraphNode *_currentNode;
     ChatBot *_chatBot;
     ChatBotPanelDialog *_panelDialog;
 
@@ -48,7 +49,7 @@ public:
     void LoadAnswerGraphFromFile(std::string filename);
     void SendMessageToChatbot(std::string message);
     void SendMessageToUser(std::string message);
-    wxBitmap *GetImageFromChatbot();
+    wxBitmap *GetImageFromChatbot();        // BO: this retrieves the image of chatbot so it can be displaed by GUI
 };
 
 #endif /* CHATLOGIC_H_ */

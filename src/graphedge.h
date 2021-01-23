@@ -6,7 +6,7 @@
 
 class GraphNode; // forward declaration
 
-class GraphEdge
+class GraphEdge     // BO:  edges don't own any data. They are just intermediatary between two nodes (child node and parent node)
 {
 private:
     // data handles (not owned)
@@ -15,8 +15,12 @@ private:
 
     // proprietary members
     int _id;
+    // BO: these are the _keywords associated with the current edge
+    //     which help us decide whether we want to
+    //     move along this edge or along another edge.
+    //     Depending on the query which is posted by the user in the chatbot.
     std::vector<std::string> _keywords; // list of topics associated with this edge
-    
+
 
 public:
     // constructor / desctructor

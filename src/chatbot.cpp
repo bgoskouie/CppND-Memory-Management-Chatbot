@@ -15,6 +15,7 @@ ChatBot::ChatBot()
     _image = nullptr;
     _chatLogic = nullptr;
     _rootNode = nullptr;
+    _filename = std::string("");    // BO2
 }
 
 // constructor WITH memory allocation
@@ -27,7 +28,9 @@ ChatBot::ChatBot(std::string filename)
     _rootNode = nullptr;
 
     // load image into heap memory
+    // BO: The image here is loaded into heap memory
     _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
+    _filename = filename;   // BO2
 }
 
 ChatBot::~ChatBot()
@@ -35,16 +38,79 @@ ChatBot::~ChatBot()
     std::cout << "ChatBot Destructor" << std::endl;
 
     // deallocate heap memory
-    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
+    if(_image != NULL)  // Attention: wxWidgets used NULL and not nullptr
+                        // BO: since wxWidget has a lot of legacy code
     {
         delete _image;
         _image = NULL;
     }
 }
 
-//// STUDENT CODE
+//// STUDENT CODE   BO2
 ////
+ChatBot::ChatBot(const ChatBot& source) {             // BO2: Copy Constructor
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+    _filename = source._filename;
+    _image = new wxBitmap(_filename, wxBITMAP_TYPE_PNG);
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+}
 
+ChatBot& ChatBot::operator=(const ChatBot& source) {  // BO2: Copy Assignment Operator
+    std::cout << "ChatBot Copy Assignment Operator" << std::endl;
+    if (this == &source) {
+        return *this;
+    }
+    if(_image != NULL)
+    {
+        delete _image;  // delete heap allocated members you own before copying new ones in
+        _image = NULL;
+    }
+    _filename = source._filename;
+    _image = new wxBitmap(_filename, wxBITMAP_TYPE_PNG);
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+    return *this;
+}
+
+ChatBot::ChatBot(ChatBot&& source) {                  // BO2: Move Constructor
+    std::cout << "ChatBot Move Constructor" << std::endl;
+    _filename = source._filename;
+    _image = source._image;
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+    source._filename = std::string("");
+    source._image = NULL;
+    source._currentNode = nullptr;
+    source._rootNode = nullptr;
+    source._chatLogic = nullptr;
+}
+
+ChatBot& ChatBot::operator=(ChatBot&& source) {       // BO2: Move Assignment Operator
+    std::cout << "ChatBot Move Assignment Operator" << std::endl;
+    if (this == &source) {
+        return *this;
+    }
+    if(_image != NULL)
+    {
+        delete _image;  // delete your own data before getting hold of the coming one
+        _image = NULL;
+    }
+    _filename = source._filename;
+    _image = source._image;
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+    source._filename = std::string("");
+    source._image = NULL;
+    source._currentNode = nullptr;
+    source._rootNode = nullptr;
+    source._chatLogic = nullptr;
+    return *this;
+}
 ////
 //// EOF STUDENT CODE
 
@@ -72,7 +138,8 @@ void ChatBot::ReceiveMessageFromUser(std::string message)
         std::sort(levDists.begin(), levDists.end(), [](const EdgeDist &a, const EdgeDist &b) { return a.second < b.second; });
         newNode = levDists.at(0).first->GetChildNode(); // after sorting the best edge is at first position
     }
-    else
+    else    // BO: if we can't find the closest keyword to the
+            // BO: input user string, go back to root node.
     {
         // go back to root node
         newNode = _rootNode;
@@ -89,7 +156,9 @@ void ChatBot::SetCurrentNode(GraphNode *node)
 
     // select a random node answer (if several answers should exist)
     std::vector<std::string> answers = _currentNode->GetAnswers();
-    std::mt19937 generator(int(std::time(0)));
+    std::mt19937 generator(int(std::time(0)));  // BO: this randomizes the answers
+                                                // BO: (if there are multiple answers for every node)
+                                                // BO: and sends a random one to user.
     std::uniform_int_distribution<int> dis(0, answers.size() - 1);
     std::string answer = answers.at(dis(generator));
 
