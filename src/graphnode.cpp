@@ -29,9 +29,14 @@ void GraphNode::AddEdgeToParentNode(GraphEdge *edge)
     _parentEdges.push_back(edge);
 }
 
-void GraphNode::AddEdgeToChildNode(GraphEdge *edge)
+// BO4:
+// void GraphNode::AddEdgeToChildNode(GraphEdge *edge)
+void GraphNode::AddEdgeToChildNode(std::unique_ptr<GraphEdge> edge)  // coming as a copy so taking transferring ownership here
+                                                                    // it must be passed with std::move and move constructor of GraphEdge will be called.
 {
-    _childEdges.push_back(edge);
+    // _childEdges.push_back(edge);
+    // BO4: unique_ptr guarantees that a single unique_ptr container has ownership of the held pointer!
+    _childEdges.push_back(std::move(edge));
 }
 
 //// STUDENT CODE
@@ -58,7 +63,9 @@ GraphEdge *GraphNode::GetChildEdgeAtIndex(int index)
     //// STUDENT CODE
     ////
 
-    return _childEdges[index];
+    // BO4:
+    // return _childEdges[index];
+    return _childEdges[index].get();  // returning the raw pointer of the edge unique_ptr
 
     ////
     //// EOF STUDENT CODE

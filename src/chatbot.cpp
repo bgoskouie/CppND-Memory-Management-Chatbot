@@ -136,6 +136,7 @@ void ChatBot::ReceiveMessageFromUser(std::string message)
     {
         // sort in ascending order of Levenshtein distance (best fit is at the top)
         std::sort(levDists.begin(), levDists.end(), [](const EdgeDist &a, const EdgeDist &b) { return a.second < b.second; });
+        // BO:  LevDists.at(0).first is an  edge object
         newNode = levDists.at(0).first->GetChildNode(); // after sorting the best edge is at first position
     }
     else    // BO: if we can't find the closest keyword to the

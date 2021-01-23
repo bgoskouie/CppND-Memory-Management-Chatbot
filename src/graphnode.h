@@ -1,6 +1,7 @@
 #ifndef GRAPHNODE_H_
 #define GRAPHNODE_H_
 
+#include <memory>    // BO4 for std::unique_ptr
 #include <vector>
 #include <string>
 #include "chatbot.h"
@@ -16,9 +17,10 @@ private:
     ////
 
     // data handles (owned)
-    std::vector<GraphEdge *> _childEdges;  // edges to subsequent nodes
+    // std::vector<GraphEdge *> _childEdges;  // edges to subsequent nodes
                                 // BO: student code needs to change ownership of childEdges from chatLogic to GraphNode
                                 // BO: but in the starting code edges are all managed in chatLogic
+    std::vector<std::unique_ptr<GraphEdge>> _childEdges;    // BO4
 
     // data handles (not owned)
     std::vector<GraphEdge *> _parentEdges; // edges to preceding nodes
@@ -48,7 +50,9 @@ public:
     // proprietary functions
     void AddToken(std::string token); // add answers to list    // BO: token is an answer
     void AddEdgeToParentNode(GraphEdge *edge);
-    void AddEdgeToChildNode(GraphEdge *edge);
+    // BO4:
+    // void AddEdgeToChildNode(GraphEdge *edge);
+    void AddEdgeToChildNode(std::unique_ptr<GraphEdge> edge);
 
     //// STUDENT CODE
     ////

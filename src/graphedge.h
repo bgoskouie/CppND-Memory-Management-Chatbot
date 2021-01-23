@@ -1,6 +1,7 @@
 #ifndef GRAPHEDGE_H_
 #define GRAPHEDGE_H_
 
+#include <iostream>  // BO4 for std::cout
 #include <vector>
 #include <string>
 
@@ -25,6 +26,12 @@ private:
 public:
     // constructor / desctructor
     GraphEdge(int id);
+    // BO4:
+    ~GraphEdge() {};
+    GraphEdge(const GraphEdge& source);
+    GraphEdge& operator=(const GraphEdge& source);
+    GraphEdge(GraphEdge&& source);
+    GraphEdge& operator=(GraphEdge&& source);
 
     // getter / setter
     int GetID() { return _id; }
