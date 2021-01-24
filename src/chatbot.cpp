@@ -48,6 +48,7 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE   BO2
 ////
+/*
 ChatBot::ChatBot(const ChatBot& source) {             // BO2: Copy Constructor
     std::cout << "ChatBot Copy Constructor" << std::endl;
     _filename = source._filename;
@@ -111,6 +112,7 @@ ChatBot& ChatBot::operator=(ChatBot&& source) {       // BO2: Move Assignment Op
     source._chatLogic = nullptr;
     return *this;
 }
+*/
 ////
 //// EOF STUDENT CODE
 

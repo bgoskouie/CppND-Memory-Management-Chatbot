@@ -17,11 +17,13 @@ ChatLogic::ChatLogic()
     //// STUDENT CODE
     ////
 
+    /* BO5:
     // create instance of chatbot
     _chatBot = new ChatBot("../images/chatbot.png");
 
     // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
     _chatBot->SetChatLogicHandle(this);
+    */
 
     ////
     //// EOF STUDENT CODE
@@ -33,7 +35,8 @@ ChatLogic::~ChatLogic()
     ////
 
     // delete chatbot instance
-    delete _chatBot;
+    // BO5:
+    // delete _chatBot;
 
     // delete all nodes
     // BO3
@@ -243,10 +246,20 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
         }
     }
 
+    // BO5
+    // create instance of chatbot
+    // _chatBot = new ChatBot("../images/chatbot.png");
+    std::unique_ptr<ChatBot> chatBot(new ChatBot("../images/chatbot.png"));
+    _chatBot = chatBot.get();  // keeping its pointer as a class member here but will pass its ownership to nodes
+    // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
+    // _chatBot->SetChatLogicHandle(this);
+    chatBot->SetChatLogicHandle(this);
     // add chatbot to graph root node
-    _chatBot->SetRootNode(rootNode);
-    rootNode->MoveChatbotHere(_chatBot);
-    
+    // _chatBot->SetRootNode(rootNode);
+    // rootNode->MoveChatbotHere(_chatBot);
+    chatBot->SetRootNode(rootNode);
+    rootNode->MoveChatbotHere(std::move(chatBot));  // giving up chatBot's ownership to root node to pass it along to other nodes 
+
     ////
     //// EOF STUDENT CODE
 }
@@ -256,14 +269,19 @@ void ChatLogic::SetPanelDialogHandle(ChatBotPanelDialog *panelDialog)
     _panelDialog = panelDialog;
 }
 
-void ChatLogic::SetChatbotHandle(ChatBot *chatbot)
-{
-    _chatBot = chatbot;
-}
+// void ChatLogic::SetChatbotHandle(ChatBot *chatbot)
+// {
+//     _chatBot = chatbot;
+// }
 
 void ChatLogic::SendMessageToChatbot(std::string message)
 {
-    _chatBot->ReceiveMessageFromUser(message);
+    if (_chatBot != nullptr) {  // BO5
+        _chatBot->ReceiveMessageFromUser(message);
+    }
+    else {
+        std::cout << "ChatLogic::SendMessageToChatbot: _chatBot is a nullptr!!!" << std::endl;
+    }
 }
 
 void ChatLogic::SendMessageToUser(std::string message)
@@ -273,5 +291,11 @@ void ChatLogic::SendMessageToUser(std::string message)
 
 wxBitmap *ChatLogic::GetImageFromChatbot()
 {
-    return _chatBot->GetImageHandle();
+    if (_chatBot != nullptr) {   // BO5
+        return _chatBot->GetImageHandle();
+    }
+    else {
+        std::cout << "ChatLogic::GetImageFromChatbot: _chatBot is a nullptr!!!" << std::endl;
+    }
+    return NULL;
 }

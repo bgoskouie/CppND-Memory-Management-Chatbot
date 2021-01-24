@@ -28,10 +28,12 @@ public:
     GraphEdge(int id);
     // BO4:
     ~GraphEdge() {};
+    /*
     GraphEdge(const GraphEdge& source);
     GraphEdge& operator=(const GraphEdge& source);
     GraphEdge(GraphEdge&& source);
     GraphEdge& operator=(GraphEdge&& source);
+    */
 
     // getter / setter
     int GetID() { return _id; }

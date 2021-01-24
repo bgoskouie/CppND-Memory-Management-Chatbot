@@ -44,15 +44,19 @@ void GraphNode::AddEdgeToChildNode(std::unique_ptr<GraphEdge> edge)  // coming a
 // BO: This is called from another node. It should move the chatbot from another
 // BO: node to this node.
 // BO: and then set this node to be the current node.
-void GraphNode::MoveChatbotHere(ChatBot *chatbot)
+// BO5:
+void GraphNode::MoveChatbotHere(std::unique_ptr<ChatBot> chatbot)  // this node is taking ownership of chatbot
+// void GraphNode::MoveChatbotHere(ChatBot *chatbot)
 {
-    _chatBot = chatbot;
+    _chatBot = std::move(chatbot);
     _chatBot->SetCurrentNode(this);
 }
 
 void GraphNode::MoveChatbotToNewNode(GraphNode *newNode)    // BO: this node wants to move chatbot to another node (the function argument node)
 {
-    newNode->MoveChatbotHere(_chatBot);
+    // BO5:
+    newNode->MoveChatbotHere(std::move(_chatBot));
+    // newNode->MoveChatbotHere(_chatBot);
     _chatBot = nullptr; // invalidate pointer at source     // this node just lost the chatbot to another node.
 }
 ////

@@ -21,6 +21,7 @@ void GraphEdge::AddToken(std::string token)
     _keywords.push_back(token);
 }
 
+/*
 GraphEdge::GraphEdge(const GraphEdge& source) {
     std::cout << "GraphEdge copy constructor" << std::endl;
     _childNode = source._childNode;
@@ -78,3 +79,4 @@ GraphEdge& GraphEdge::operator=(GraphEdge&& source) {
     source._keywords.clear();
     return *this;
 }
+*/

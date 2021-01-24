@@ -24,8 +24,10 @@ private:
 
     // data handles (not owned)
     std::vector<GraphEdge *> _parentEdges; // edges to preceding nodes
-    ChatBot *_chatBot;          // BO: a handle to chatBot. It is nullptr if the chatbot is not currently residing in the current node.
+    // BO5:
+    // ChatBot *_chatBot;          // BO: a handle to chatBot. It is nullptr if the chatbot is not currently residing in the current node.
                                 // BO: when chatbot moves away from a node it will be invalidated again!
+    std::unique_ptr<ChatBot> _chatBot;
 
     ////
     //// EOF STUDENT CODE
@@ -56,9 +58,9 @@ public:
 
     //// STUDENT CODE
     ////
-
-    void MoveChatbotHere(ChatBot *chatbot);     // BO: I think this should move the chatbot to this node.
-
+    // BO5:
+    // void MoveChatbotHere(ChatBot *chatbot);     // BO: I think this should move the chatbot to this node.
+    void MoveChatbotHere(std::unique_ptr<ChatBot> chatbot);
     ////
     //// EOF STUDENT CODE
 
