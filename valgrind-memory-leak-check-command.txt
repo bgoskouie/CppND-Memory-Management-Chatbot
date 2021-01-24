@@ -1,0 +1,6 @@
+First cd to the directory where the executable exists then run the below command:
+
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=/home/babakg/Documents/valgrind-out_orig2.txt /home/babakg/Documents/training/Udacity-3rdProjChatBotMemoryMgmt/onGitHub/original_starting_code_all_rawptrs/CppND-Memory-Management-Chatbot/build/membot
+
+The valgring .txt file report output will get created.
+Search for Leak Summary and see how many blocks of memory is leaking and read above for where is leaking.
