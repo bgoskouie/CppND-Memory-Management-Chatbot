@@ -135,7 +135,6 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                         // BO3
                         // auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](GraphNode *node) { return node->GetID() == id; });
                         auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](std::unique_ptr<GraphNode> &node) { return node->GetID() == id; });      // BO3
-                        // BO3:   Should I do above or nodec->GetID()
 
                         // create new element if ID does not yet exist
                         if (newNode == _nodes.end())
@@ -148,7 +147,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                             // add all answers to current node
                             // BO3
                             // AddAllTokensToElement("ANSWER", tokens, **newNode);
-                            AddAllTokensToElement("ANSWER", tokens, *(newNode->get()));     // BO3
+                            AddAllTokensToElement("ANSWER", tokens, *(newNode->get()));
                         }
 
                         ////
@@ -247,18 +246,14 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
     }
 
     // BO5
-    // create instance of chatbot
-    // _chatBot = new ChatBot("../images/chatbot.png");
-    std::unique_ptr<ChatBot> chatBot(new ChatBot("../images/chatbot.png"));
-    _chatBot = chatBot.get();  // keeping its pointer as a class member here but will pass its ownership to nodes
+    // create a stack-allocated local instance of chatbot and "move" its ownership to root node
+    ChatBot chatBot = ChatBot("../images/chatbot.png");
+
     // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
-    // _chatBot->SetChatLogicHandle(this);
-    chatBot->SetChatLogicHandle(this);
-    // add chatbot to graph root node
-    // _chatBot->SetRootNode(rootNode);
-    // rootNode->MoveChatbotHere(_chatBot);
-    chatBot->SetRootNode(rootNode);
-    rootNode->MoveChatbotHere(std::move(chatBot));  // giving up chatBot's ownership to root node to pass it along to other nodes 
+    chatBot.SetChatLogicHandle(this);
+    chatBot.SetRootNode(rootNode);
+    _chatBot = &chatBot;
+    rootNode->MoveChatbotHere(std::move(chatBot));  // giving up chatBot's ownership to root node to pass it along to other nodes
 
     ////
     //// EOF STUDENT CODE
@@ -269,19 +264,14 @@ void ChatLogic::SetPanelDialogHandle(ChatBotPanelDialog *panelDialog)
     _panelDialog = panelDialog;
 }
 
-// void ChatLogic::SetChatbotHandle(ChatBot *chatbot)
-// {
-//     _chatBot = chatbot;
-// }
+void ChatLogic::SetChatbotHandle(ChatBot *chatbot)
+{
+    _chatBot = chatbot;
+}
 
 void ChatLogic::SendMessageToChatbot(std::string message)
 {
-    if (_chatBot != nullptr) {  // BO5
-        _chatBot->ReceiveMessageFromUser(message);
-    }
-    else {
-        std::cout << "ChatLogic::SendMessageToChatbot: _chatBot is a nullptr!!!" << std::endl;
-    }
+    _chatBot->ReceiveMessageFromUser(message);
 }
 
 void ChatLogic::SendMessageToUser(std::string message)
@@ -291,11 +281,5 @@ void ChatLogic::SendMessageToUser(std::string message)
 
 wxBitmap *ChatLogic::GetImageFromChatbot()
 {
-    if (_chatBot != nullptr) {   // BO5
-        return _chatBot->GetImageHandle();
-    }
-    else {
-        std::cout << "ChatLogic::GetImageFromChatbot: _chatBot is a nullptr!!!" << std::endl;
-    }
-    return NULL;
+    return _chatBot->GetImageHandle();
 }

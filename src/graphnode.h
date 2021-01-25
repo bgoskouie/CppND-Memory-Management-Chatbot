@@ -17,17 +17,14 @@ private:
     ////
 
     // data handles (owned)
-    // std::vector<GraphEdge *> _childEdges;  // edges to subsequent nodes
-                                // BO: student code needs to change ownership of childEdges from chatLogic to GraphNode
-                                // BO: but in the starting code edges are all managed in chatLogic
+    // std::vector<GraphEdge *> _childEdges;    // edges to subsequent nodes
+                                                // BO: student code needs to change ownership of childEdges from chatLogic to GraphNode
+                                                // BO: but in the starting code edges are all managed in chatLogic
     std::vector<std::unique_ptr<GraphEdge>> _childEdges;    // BO4
 
     // data handles (not owned)
     std::vector<GraphEdge *> _parentEdges; // edges to preceding nodes
-    // BO5:
-    // ChatBot *_chatBot;          // BO: a handle to chatBot. It is nullptr if the chatbot is not currently residing in the current node.
-                                // BO: when chatbot moves away from a node it will be invalidated again!
-    std::unique_ptr<ChatBot> _chatBot;
+    ChatBot _chatBot;           // BO5: when chatbot moves away from a node it will be invalidated again!
 
     ////
     //// EOF STUDENT CODE
@@ -58,9 +55,7 @@ public:
 
     //// STUDENT CODE
     ////
-    // BO5:
-    // void MoveChatbotHere(ChatBot *chatbot);     // BO: I think this should move the chatbot to this node.
-    void MoveChatbotHere(std::unique_ptr<ChatBot> chatbot);
+    void MoveChatbotHere(ChatBot chatbot);  // BO5
     ////
     //// EOF STUDENT CODE
 

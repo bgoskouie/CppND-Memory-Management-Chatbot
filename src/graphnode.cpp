@@ -12,8 +12,7 @@ GraphNode::~GraphNode()
     //// STUDENT CODE
     ////
     std::cout << "GraphNode Destructor id = " << _id << std::endl;
-    // BO: BUG resolved: _chatBot is not owned by GraphNode so it should not get deleted here.
-    // delete _chatBot;
+    // delete _chatBot;    // BO0: BUG resolved: _chatBot is not owned by GraphNode so it should not get deleted here.
 
     ////
     //// EOF STUDENT CODE
@@ -31,8 +30,8 @@ void GraphNode::AddEdgeToParentNode(GraphEdge *edge)
 
 // BO4:
 // void GraphNode::AddEdgeToChildNode(GraphEdge *edge)
-void GraphNode::AddEdgeToChildNode(std::unique_ptr<GraphEdge> edge)  // coming as a copy so taking transferring ownership here
-                                                                    // it must be passed with std::move and move constructor of GraphEdge will be called.
+void GraphNode::AddEdgeToChildNode(std::unique_ptr<GraphEdge> edge)     // coming as a copy so taking transferring ownership here
+                                                                        // it must be passed with std::move and move constructor of GraphEdge will be called.
 {
     // _childEdges.push_back(edge);
     // BO4: unique_ptr guarantees that a single unique_ptr container has ownership of the held pointer!
@@ -41,23 +40,17 @@ void GraphNode::AddEdgeToChildNode(std::unique_ptr<GraphEdge> edge)  // coming a
 
 //// STUDENT CODE
 ////
-// BO: This is called from another node. It should move the chatbot from another
-// BO: node to this node.
-// BO: and then set this node to be the current node.
-// BO5:
-void GraphNode::MoveChatbotHere(std::unique_ptr<ChatBot> chatbot)  // this node is taking ownership of chatbot
-// void GraphNode::MoveChatbotHere(ChatBot *chatbot)
+// BO5: This is called from another node. It should move the chatbot from another node to this node.
+//      This node is taking ownership of chatbot
+void GraphNode::MoveChatbotHere(ChatBot chatbot)
 {
     _chatBot = std::move(chatbot);
-    _chatBot->SetCurrentNode(this);
+    _chatBot.SetCurrentNode(this);
 }
 
 void GraphNode::MoveChatbotToNewNode(GraphNode *newNode)    // BO: this node wants to move chatbot to another node (the function argument node)
 {
-    // BO5:
-    newNode->MoveChatbotHere(std::move(_chatBot));
-    // newNode->MoveChatbotHere(_chatBot);
-    _chatBot = nullptr; // invalidate pointer at source     // this node just lost the chatbot to another node.
+    newNode->MoveChatbotHere(std::move(_chatBot));          // BO5: this node just lost the chatbot to another node.
 }
 ////
 //// EOF STUDENT CODE

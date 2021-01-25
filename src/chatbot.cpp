@@ -46,9 +46,8 @@ ChatBot::~ChatBot()
     }
 }
 
-//// STUDENT CODE   BO2
+//// STUDENT CODE
 ////
-/*
 ChatBot::ChatBot(const ChatBot& source) {             // BO2: Copy Constructor
     std::cout << "ChatBot Copy Constructor" << std::endl;
     _filename = source._filename;
@@ -112,7 +111,6 @@ ChatBot& ChatBot::operator=(ChatBot&& source) {       // BO2: Move Assignment Op
     source._chatLogic = nullptr;
     return *this;
 }
-*/
 ////
 //// EOF STUDENT CODE
 
@@ -141,8 +139,7 @@ void ChatBot::ReceiveMessageFromUser(std::string message)
         // BO:  LevDists.at(0).first is an  edge object
         newNode = levDists.at(0).first->GetChildNode(); // after sorting the best edge is at first position
     }
-    else    // BO: if we can't find the closest keyword to the
-            // BO: input user string, go back to root node.
+    else    // BO: if we can't find the closest keyword to the input user string, go back to root node.
     {
         // go back to root node
         newNode = _rootNode;
@@ -165,6 +162,7 @@ void ChatBot::SetCurrentNode(GraphNode *node)
     std::uniform_int_distribution<int> dis(0, answers.size() - 1);
     std::string answer = answers.at(dis(generator));
 
+    _chatLogic->SetChatbotHandle(this);
     // send selected node answer to user
     _chatLogic->SendMessageToUser(answer);
 }

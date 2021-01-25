@@ -17,9 +17,9 @@ private:
     ////
 
     // data handles (owned)
-    // std::vector<GraphNode *> _nodes;  // BO: chatlogic owns nodes
-    std::vector<std::unique_ptr<GraphNode>> _nodes;    // BO3
-    std::vector<GraphEdge *> _edges;  // BO: you will have to change the ownership of edges from chatLogic to the nodes
+    // std::vector<GraphNode *> _nodes;                 // BO: chatlogic owns nodes
+    std::vector<std::unique_ptr<GraphNode>> _nodes;     // BO3
+    std::vector<GraphEdge *> _edges;                    // BO: you will have to change the ownership of edges from chatLogic to the nodes
 
     ////
     //// EOF STUDENT CODE
@@ -43,7 +43,7 @@ public:
 
     // getter / setter
     void SetPanelDialogHandle(ChatBotPanelDialog *panelDialog);
-    // void SetChatbotHandle(ChatBot *chatbot);
+    void SetChatbotHandle(ChatBot *chatbot);
 
     // proprietary functions
     void LoadAnswerGraphFromFile(std::string filename);
